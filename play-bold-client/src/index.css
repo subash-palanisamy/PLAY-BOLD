@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+
+body, #root {
+  background-color: #0b241b; /* Dark Green bg for all pages */
+  color: #e6f4e8;            /* Default light text color */
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}

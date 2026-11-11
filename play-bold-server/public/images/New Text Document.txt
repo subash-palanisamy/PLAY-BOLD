@@ -1,0 +1,420 @@
+import { useState, useRef, useEffect } from "react";
+
+const navData = {
+  NEW: {
+    type: "simple",
+    columns: [
+      {
+        items: ["Latest Articles", "Editor's Picks", "Trending Now", "PLAYBOLD x Culture"],
+      },
+      {
+        items: ["Street Style", "Run Clubs", "Athlete Stories"],
+      },
+    ],
+  },
+  STORIES: {
+    type: "mega",
+    columns: [
+      {
+        heading: "Featured",
+        bold: true,
+        items: ["Cover Story", "Deep Dives", "Opinion", "Interviews"],
+      },
+      {
+        heading: "Topics",
+        items: ["Running", "Training & Gym", "Football", "Cricket", "Basketball", "Badminton", "Yoga"],
+      },
+      {
+        heading: "Gear Reviews",
+        items: ["Shoes", "Apparel", "Accessories", "Equipment", "Bags & Backpacks"],
+      },
+      {
+        heading: "Community",
+        items: ["Events", "Run Clubs", "Challenges", "Leaderboards"],
+      },
+    ],
+  },
+  LIFESTYLE: {
+    type: "mega",
+    columns: [
+      {
+        heading: null,
+        bold: true,
+        items: ["Sneaker Store", "Travel Stories", "Insider Picks", "Style Guides", "Shoes", "Clothing"],
+      },
+      {
+        heading: "Icons",
+        items: ["Classics", "Limited Drops", "Collaborations", "Archive"],
+      },
+      {
+        heading: "Collabs",
+        items: [
+          "PLAYBOLD x Nike",
+          "PLAYBOLD x Puma",
+          "PLAYBOLD x Adidas",
+          "PLAYBOLD x New Balance",
+          "PLAYBOLD x ASICS",
+        ],
+      },
+    ],
+  },
+  TRAINING: {
+    type: "mega",
+    columns: [
+      {
+        heading: "Highlights",
+        bold: false,
+        items: ["Beginner Guides", "Pro Tips", "Science of Sport", "Injury Prevention", "Nutrition", "Recovery"],
+      },
+      {
+        heading: "Workouts",
+        items: ["Running Plans", "HIIT", "Strength", "Mobility", "Yoga", "Cross Training"],
+      },
+      {
+        heading: "Gear",
+        items: ["Shoes", "Clothing", "Accessories", "Tracking Gear"],
+      },
+      {
+        heading: "Sports",
+        items: ["Football", "Cricket", "Basketball", "Badminton", "Swimming"],
+      },
+    ],
+  },
+  COMMUNITY: {
+    type: "simple",
+    columns: [
+      {
+        items: ["Join PLAYBOLD", "Events Near You", "Run Clubs", "Challenges", "Leaderboards", "Submit Your Story"],
+      },
+      {
+        items: ["Newsletter", "Podcast", "YouTube", "Social Feed"],
+      },
+    ],
+  },
+  SALE: {
+    type: "sale",
+    columns: [
+      {
+        bold: true,
+        items: ["Top Picks Under ₹999", "Gear Deals", "Archive Sales"],
+      },
+      {
+        heading: "Categories",
+        items: ["Shoes", "Clothing", "Accessories"],
+      },
+      {
+        heading: "By Sport",
+        items: ["Running", "Football", "Cricket", "Basketball"],
+      },
+    ],
+  },
+};
+
+const navLinks = ["NEW", "MEN", "WOMEN", "KIDS", "LIFESTYLE", "SALE"];
+
+export default function PlayboldNavbar() {
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState(null);
+  const timeoutRef = useRef(null);
+
+  const handleMouseEnter = (link) => {
+    clearTimeout(timeoutRef.current);
+    setActiveMenu(link);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setActiveMenu(null), 150);
+  };
+
+  useEffect(() => () => clearTimeout(timeoutRef.current), []);
+
+  const MegaMenu = ({ data, isSale }) => (
+    <div
+      className="absolute top-full left-0 right-0 bg-white border-t-2 border-red-600 shadow-2xl z-50 px-12 py-8"
+      onMouseEnter={() => clearTimeout(timeoutRef.current)}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div className="max-w-7xl mx-auto flex gap-12">
+        {data.columns.map((col, i) => (
+          <div key={i} className="min-w-[140px]">
+            {col.heading && (
+              <div className="mb-3">
+                <p className="text-xs font-black tracking-widest text-black uppercase border-b border-gray-200 pb-2">
+                  {col.heading}
+                </p>
+              </div>
+            )}
+            <ul className="space-y-2">
+              {col.items.map((item, j) => (
+                <li key={j}>
+                  <a
+                    href="#"
+                    className={`text-sm hover:text-red-600 transition-colors duration-150 block ${
+                      col.bold && !col.heading
+                        ? "font-bold text-black text-base"
+                        : isSale && i === 0
+                        ? "font-bold text-red-600"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="font-sans">
+      {/* Google Fonts */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;900&display=swap');
+        .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+        .font-barlow { font-family: 'Barlow', sans-serif; }
+        .nav-underline { position: relative; }
+        .nav-underline::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: #ef4444;
+          transition: width 0.2s ease;
+        }
+        .nav-underline.active::after,
+        .nav-underline:hover::after { width: 100%; }
+      `}</style>
+
+      {/* Announcement Bar */}
+      <div className="bg-red-600 text-white text-center py-2 text-xs font-barlow font-semibold tracking-widest uppercase">
+        ⚡ Dare to be Different — Free Shipping on Orders Above ₹999 ⚡
+      </div>
+
+      {/* Main Navbar */}
+      <nav className="bg-black relative z-40 font-barlow">
+        <div className="max-w-7xl mx-auto px-6 flex items-center h-16 gap-8">
+
+          {/* Logo */}
+          <a href="#" className="flex items-center gap-2 flex-shrink-0">
+            <span className="font-bebas text-white text-3xl tracking-widest leading-none">
+              PLAY<span className="text-red-600">BOLD</span>
+            </span>
+          </a>
+
+          {/* Desktop Nav Links */}
+          <div className="hidden lg:flex items-center gap-1 flex-1">
+            {navLinks.map((link) => (
+              <div
+                key={link}
+                className="relative"
+                onMouseEnter={() => handleMouseEnter(link)}
+                onMouseLeave={handleMouseLeave}
+              >
+                <a
+                  href="#"
+                  className={`nav-underline px-3 py-5 text-sm font-bold tracking-wider uppercase inline-block transition-colors duration-150 ${
+                    link === "SALE"
+                      ? "text-red-500 hover:text-red-400"
+                      : "text-white hover:text-gray-300"
+                  } ${activeMenu === link ? "active" : ""}`}
+                >
+                  {link}
+                </a>
+              </div>
+            ))}
+          </div>
+
+          {/* Right Icons */}
+          <div className="hidden lg:flex items-center gap-2 ml-auto">
+            {/* Search */}
+            {searchOpen ? (
+              <div className="flex items-center gap-2 bg-white rounded-none px-3 py-1.5">
+                <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+                </svg>
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="SEARCH..."
+                  className="outline-none text-black text-sm font-bold tracking-wider w-48 placeholder-gray-400 font-barlow"
+                  onBlur={() => setSearchOpen(false)}
+                />
+              </div>
+            ) : (
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="flex items-center gap-2 border border-white text-white px-4 py-1.5 text-sm font-black tracking-widest hover:bg-white hover:text-black transition-colors duration-200"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+                </svg>
+                SEARCH
+              </button>
+            )}
+
+            {/* Wishlist */}
+            <button className="text-white hover:text-red-500 transition-colors p-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 0 1 6.364 0L12 7.636l1.318-1.318a4.5 4.5 0 0 1 6.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 0 1 0-6.364z" />
+              </svg>
+            </button>
+
+            {/* User */}
+            <button className="text-white hover:text-red-500 transition-colors p-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            className="lg:hidden ml-auto text-white p-2"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Desktop Mega Menu Dropdown */}
+        {activeMenu && navData[activeMenu] && (
+          <MegaMenu data={navData[activeMenu]} isSale={activeMenu === "SALE"} />
+        )}
+      </nav>
+
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div className="lg:hidden bg-black font-barlow border-t border-gray-800">
+          {navLinks.map((link) => (
+            <div key={link} className="border-b border-gray-800">
+              <button
+                className={`w-full text-left px-6 py-4 text-sm font-black tracking-widest uppercase flex justify-between items-center ${
+                  link === "SALE" ? "text-red-500" : "text-white"
+                }`}
+                onClick={() => setMobileExpanded(mobileExpanded === link ? null : link)}
+              >
+                {link}
+                <svg
+                  className={`w-4 h-4 transition-transform ${mobileExpanded === link ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {mobileExpanded === link && navData[link] && (
+                <div className="bg-gray-950 px-6 pb-4">
+                  {navData[link].columns.map((col, i) => (
+                    <div key={i} className="pt-3">
+                      {col.heading && (
+                        <p className="text-xs text-red-600 font-black tracking-widest uppercase mb-2">{col.heading}</p>
+                      )}
+                      {col.items.map((item, j) => (
+                        <a key={j} href="#" className="block text-gray-400 text-sm py-1 hover:text-white transition-colors">
+                          {item}
+                        </a>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+
+          {/* Mobile Bottom Icons */}
+          <div className="flex items-center gap-6 px-6 py-4 border-t border-gray-800">
+            <button className="text-white text-sm font-bold tracking-wider flex items-center gap-2">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+              </svg>
+              SEARCH
+            </button>
+            <button className="text-white">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 0 1 6.364 0L12 7.636l1.318-1.318a4.5 4.5 0 0 1 6.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 0 1 0-6.364z" />
+              </svg>
+            </button>
+            <button className="text-white">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Demo Content */}
+      <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+        <div className="text-center font-barlow">
+          <p className="font-bebas text-6xl text-black tracking-widest">PLAYBOLD</p>
+          <p className="text-gray-500 tracking-widest text-sm uppercase mt-2">Dare to be Different</p>
+          <p className="text-gray-400 text-xs mt-4">Hover on nav links to see mega menus</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+<img
+ src="/images/logo/Logo.png"
+  alt="logo"
+  onError={e => {
+  e.currentTarget.style.display = "none";
+  e.currentTarget.nextSibling.style.display = "inline";
+   }} />
+
+
+
+
+
+
+
+
+
+
+collections
+
+1.Adidas Pixar Cars Adifom Superstar 360 Shoes Kids - Red _ adidas India
+
+2.adidas RANVEER SINGH SUPERSTAR - Black _ adidas India
+
+3.Buy Air Force 1 '07 Women's Shoes Online _ Nike India
+
+4.PUMA x RCB 2026 Palermo Leather Sneakers (ithumattum unisex) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
